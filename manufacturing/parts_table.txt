@@ -1,0 +1,13 @@
+ 1. 	    Red LED
+ 2. 	    Yellow LED
+ 3. 100 Ohm Ferrite Bead
+ 4. 40 Ohm  Ferrite Bead
+ 5. 10k     Resistor
+ 6. 1.5k    Resistor
+ 7. 100k    Resistor
+ 8. 1u      Capacitor
+ 9. 0.1u    Capacitor
+10. 22u     Capacitor
+11. 10u     Capacitor
+12. 0.01u   Capacitor
+13. 10p     Capacitor

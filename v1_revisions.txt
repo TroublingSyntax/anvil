@@ -1,0 +1,22 @@
+Anvil Series v1: Revisions and future version notes
+
+Revisions:
+1. USB LED labels
+	Issue:    The silk screen labels for "tx" and "rx" are reversed.
+	Notes:    Found when using serial terminal, "rx" expected to blink as it was receiving bytes, but "tx" flashed instead.
+	Solution: Change the silk screen labels to reflect the real LED functions.
+	Status:   Needs to be confirmed in pcb design before changes are made.
+2. Boot Switch labels
+	Issue:    The silk screen label for "boot" is on the wrong side of the slider swit
+	Notes:    Found when trying to upload first LED blink program. When in STM32 Cube IDE, the debugger would start at the default first breakpoint, then when program resumed, it would crash saying it 		  was outside program space in memory. Likely due to address jumping out of program flash memory, as online forums suggested. It was likely entering the boot code because of the switch 			  being reversed, and therefore the program counter pointed to the system memory, wherever the bootloader was located in that memory section.
+	Solution: Change the silk screen label to reflect the correct "boot" position.
+	Status:	  Needs to be confirmed in pcb design before changes are made.
+3. External clock oscillator needs power.
+	Issue:    The external clock oscillator smd component is incorrectly connected to the circuit. pin 4, the Vdd pin according to the datasheet, specifies a voltage of +3.3V, however it is 					  currently connected to ground. This is because the tutorial from Phil's Lab on desinging STM32 boards in KiCad used a similar component, but it differed in that sense, because the 				  current connection has pin four grounded instead, as in the Phil's Lab tutorial.
+	Notes:	  Once the second revision item regarding the boot selection was addressed and fixed, the program did not fault immediately, but still did not blink. This is because the program went to 			  the clock initialization built-in firmware, and attempted to initialize the external "HSE" clock source. It had a timeout in that firmware, and after using the bugger to narrow down 			  the cause of the issue, it was seen that the issue that caused the program to do nothing was because once the timeout was met for initializing the external clock was met, the firmware 			  would throw an error, which simply points to an infinite while loop that does not display a warning or message of any kind. Once the firmware was reconfigured to use the built-in (and 			  much slower) internal clock oscillator, the program ran as expected for the first time, blinking both LEDs.
+	Solution: Likely the solution will involve adding a +3.3V path to pin 4 on the same clock oscillator component that is currently being used in anvil v1. This should be the only necessary change 			  for this issue. It will likely involve some rerouting.
+	Status:   This issue was confirmed by testing the original clock oscillator from the prototype board. The testing was done by soldering a few pieces of wire to each pad and connecting pins 2 and 		  4 to ground and +3.3V, respectively, and by connecting HSE_OUT to the input of the oscilloscope. With AC selected and a trigger on rising edge, and with a very small width scale, it 			  was confirmed through selecting frequency as the measurement selection on the oscilloscope that the issue of no oscillator frequency was caused because of the lack of voltage.
+
+Potential Changes or improvements:
+1. Add onboard IMU (?)
+2. Add SD or MicroSD card (?)
